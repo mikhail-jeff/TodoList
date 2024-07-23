@@ -13,6 +13,7 @@ namespace TodoList.Controllers
         private readonly TaskRepository _taskRepository = new TaskRepository();
 
 
+        // Get All Task
         public ActionResult Index()
         {
             var tasks = _taskRepository.GetAll();
@@ -20,7 +21,7 @@ namespace TodoList.Controllers
         }
 
 
-
+        // Get Task Details
         public ActionResult Details(int id)
         {
             var task = _taskRepository.GetById(id);
@@ -31,11 +32,15 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+
+        // Create Task View
         public ActionResult Create()
         {
             return View();
         }
 
+
+        // Create Task
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(TodoList.Models.Task task)
@@ -49,6 +54,8 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+
+        // Edit Task
         public ActionResult Edit(int id)
         {
             var task = _taskRepository.GetById(id);
@@ -59,6 +66,8 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+
+        // Edit Task
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(TodoList.Models.Task task)
@@ -71,6 +80,8 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+
+        // Delete Task By Id
         public ActionResult Delete(int id)
         {
             var task = _taskRepository.GetById(id);
@@ -81,6 +92,8 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+
+        // Delete All Task
         public ActionResult DeleteAll()
         {
             _taskRepository.DeleteAll();
@@ -88,6 +101,7 @@ namespace TodoList.Controllers
         }
 
 
+        // Delete Confirm
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -96,18 +110,21 @@ namespace TodoList.Controllers
             return RedirectToAction("Index");
         }
 
+
+        // Export Task
         public ActionResult Export()
         {
             var tasks = _taskRepository.GetAll();
             StringBuilder csv = new StringBuilder();
-            csv.AppendLine("Id,Title,DateStarted,DateOfCompletion,Details,AssignedTo,Status");
+            csv.AppendLine("Id,Title,CreatedAt,DateStarted,DateOfCompletion,Details,AssignedTo,Status");
 
             foreach (var task in tasks)
             {
                 var line = string.Format(
-                    "{0},{1},{2},{3},{4},{5},{6}",
+                    "{0},{1},{2},{3},{4},{5},{6},{7}",
                     task.Id,
                     EscapeCsvValue(task.Title),
+                    task.CreatedAt.ToString("yyyy-MM-dd HH:mm") ?? "",
                     task.DateStarted.ToString("yyyy-MM-dd") ?? "",
                     task.DateOfCompletion.ToString("yyyy-MM-dd") ?? "",
                     EscapeCsvValue(task.Details),
@@ -120,6 +137,7 @@ namespace TodoList.Controllers
             return File(new UTF8Encoding().GetBytes(csv.ToString()), "text/csv", "tasks.csv");
         }
 
+
         private string EscapeCsvValue(string value)
         {
             if (value.Contains(",") || value.Contains("\""))
@@ -130,6 +148,7 @@ namespace TodoList.Controllers
         }
 
 
+        // Import Task
         [HttpPost]
         public ActionResult Import(IFormFile file)
         {
@@ -149,11 +168,11 @@ namespace TodoList.Controllers
                                 Id = int.Parse(values[0]),
                                 Title = values[1],
                                 CreatedAt = DateTime.Now,
-                                DateStarted = DateTime.Parse(values[2]),
-                                DateOfCompletion = DateTime.Parse(values[3]),
-                                Details = values[4],
-                                AssignedTo = values[5],
-                                Status = values[6]
+                                DateStarted = DateTime.Parse(values[3]),
+                                DateOfCompletion = DateTime.Parse(values[4]),
+                                Details = values[5],
+                                AssignedTo = values[6],
+                                Status = values[7]
                             };
 
                             _taskRepository.Add(task);

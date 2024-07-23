@@ -8,7 +8,7 @@ namespace TodoList.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "Title cannot be longer than 100 characters.")]
+        [StringLength(30, ErrorMessage = "Title cannot be longer than 30 characters.")]
         public string Title { get; set; } = string.Empty;
 
         [DataType(DataType.DateTime)]
@@ -20,10 +20,10 @@ namespace TodoList.Models
         [DataType(DataType.Date)]
         public DateTime DateOfCompletion { get; set; }
 
-        [StringLength(500, ErrorMessage = "Details cannot be longer than 500 characters.")]
+        [StringLength(50, ErrorMessage = "Details cannot be longer than 50 characters.")]
         public string Details { get; set; } = string.Empty;
 
-        [StringLength(50, ErrorMessage = "Assigned to cannot be longer than 50 characters.")]
+        [StringLength(20, ErrorMessage = "Assigned to cannot be longer than 20 characters.")]
         public string AssignedTo { get; set; } = string.Empty;
 
         public string Status { get; set; } = string.Empty;
