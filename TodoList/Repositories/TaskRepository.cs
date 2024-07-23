@@ -43,5 +43,11 @@ namespace TodoList.Repositories
         }
 
 
+
+        public void DeleteAll()
+        {
+            tasks.Clear();
+        }
+
     }
 }

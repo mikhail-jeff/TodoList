@@ -81,6 +81,13 @@ namespace TodoList.Controllers
             return View(task);
         }
 
+        public ActionResult DeleteAll()
+        {
+            _taskRepository.DeleteAll();
+            return RedirectToAction("Index");
+        }
+
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

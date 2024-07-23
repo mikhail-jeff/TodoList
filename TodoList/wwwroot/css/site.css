@@ -206,10 +206,14 @@ button {
         background: #555;
     }
 
-
 .action-btn {
-    width: 10px;
+    width: 30px;
+    transition: transform 0.3s;
 }
+
+    .action-btn:hover {
+        transform: scale(0.95);
+    }
 
 .export-import-btn {
     width: 120px;

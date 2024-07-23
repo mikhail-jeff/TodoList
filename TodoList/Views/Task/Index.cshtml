@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<TodoList.Models.Task>
 @{
     ViewBag.Title = "Task List";
+    var taskCount = Model.Count();
 }
 
 <div>
@@ -9,8 +10,13 @@
         @using (Html.BeginForm("Export", "Task", FormMethod.Get))
         {
             <span class="d-flex justify-content-between">
-                <h3>Task List</h3>
-                <button type="submit" class="btn btn-outline-primary export-import-btn fw-bold">Export File</button>
+                <h3>
+                    Task List @if (taskCount > 0)
+                    {
+                        <span>(@taskCount)</span>
+                    }
+                </h3>
+                <button type="submit" class="btn btn-outline-secondary export-import-btn fw-bold">Export File</button>
             </span>
         }
 
@@ -25,10 +31,8 @@
 
                 <div class="d-flex justify-content-between align-items-center gap-2">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-outline-primary export-import-btn fw-bold">Import File</button>
+                        <button type="submit" class="btn btn-outline-secondary export-import-btn fw-bold">Import File</button>
                     </div>
-
-
                 </div>
             </div>
         }
@@ -37,11 +41,16 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-4">
-        <h3>
+        <div class="d-flex justify-content-center align-items-center gap-3">
             <a href="@Url.Action("Create", "Task")" class="btn btn-primary fw-bold">
                 Add Task <i class="fa-solid fa-plus ms-1"></i>
             </a>
-        </h3>
+
+            <button class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteAllModal">
+                Clear List <i class="fa-solid fa-trash ms-1"></i>
+            </button>
+        </div>
+
         <div class="d-flex search">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" />
             <button class="btn btn-outline-secondary" type="submit">
@@ -80,14 +89,14 @@
                         <td>@item.DateOfCompletion.ToString("MMMM d, yyyy")</td>
                         <td>@Html.DisplayFor(modelItem => item.AssignedTo)</td>
                         <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                        <td class="d-flex justify-content-center gap-2">
-                            <a href="@Url.Action("Edit", "Task", new { id = item.Id })" class="btn btn-sm btn-primary flex-fill action-btn" title="Edit">
+                        <td class="d-flex justify-content-center align-items-center gap-2">
+                            <a href="@Url.Action("Edit", "Task", new { id = item.Id })" class="btn btn-sm btn-primary action-btn rounded-circle align-content-center" title="Edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
-                            <a href="@Url.Action("Details", "Task", new { id = item.Id })" class="btn btn-sm btn-info flex-fill action-btn" title="Details">
+                            <a href="@Url.Action("Details", "Task", new { id = item.Id })" class="btn btn-sm btn-info action-btn rounded-circle align-content-center" title="Details">
                                 <i class="fas fa-info-circle text-white"></i>
                             </a>
-                            <a href="@Url.Action("Delete", "Task", new { id = item.Id })" class="btn btn-sm btn-danger flex-fill action-btn" title="Delete">
+                            <a href="@Url.Action("Delete", "Task", new { id = item.Id })" class="btn btn-sm btn-danger action-btn rounded-circle align-content-center" title="Delete">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </td>
@@ -96,4 +105,23 @@
             </tbody>
         </table>
     }
+</div>
+
+<!-- Delete All Modal -->
+<div class="modal fade" id="deleteAllModal" tabindex="-1" aria-labelledby="deleteAllModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="deleteAllModalLabel">Confirm Delete All Tasks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete all tasks? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("DeleteAll", "Task")" class="btn btn-danger">Yes</a>
+                <a href="@Url.Action("Index", "Task")" class="btn btn-secondary ms-1">No</a>
+            </div>
+        </div>
+    </div>
 </div>
