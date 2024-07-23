@@ -10,7 +10,7 @@
         {
             <span class="d-flex justify-content-between">
                 <h3>Task List</h3>
-                <button type="submit" class="btn btn-primary export-import-btn fw-bold">Export File</button>
+                <button type="submit" class="btn btn-outline-primary export-import-btn fw-bold">Export File</button>
             </span>
         }
 
@@ -25,7 +25,7 @@
 
                 <div class="d-flex justify-content-between align-items-center gap-2">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary export-import-btn fw-bold">Import File</button>
+                        <button type="submit" class="btn btn-outline-primary export-import-btn fw-bold">Import File</button>
                     </div>
 
 
@@ -72,7 +72,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Reverse())
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Title)</td>
