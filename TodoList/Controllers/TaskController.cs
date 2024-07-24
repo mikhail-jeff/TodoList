@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Text;
@@ -12,7 +11,6 @@ namespace TodoList.Controllers
     {
         private readonly TaskRepository _taskRepository = new TaskRepository();
 
-
         // Get All Task
         public ActionResult Index()
         {
@@ -20,25 +18,23 @@ namespace TodoList.Controllers
             return View(tasks);
         }
 
-
         // Get Task Details
         public ActionResult Details(int id)
         {
             var task = _taskRepository.GetById(id);
             if (task == null)
             {
-                return NotFound();
+                TempData["Error"] = "Task not found.";
+                return RedirectToAction("Index");
             }
             return View(task);
         }
-
 
         // Create Task View
         public ActionResult Create()
         {
             return View();
         }
-
 
         // Create Task
         [HttpPost]
@@ -49,11 +45,11 @@ namespace TodoList.Controllers
             {
                 task.CreatedAt = DateTime.Now;
                 _taskRepository.Add(task);
+                TempData["Message"] = "Task created successfully!";
                 return RedirectToAction("Index");
             }
             return View(task);
         }
-
 
         // Edit Task
         public ActionResult Edit(int id)
@@ -61,11 +57,11 @@ namespace TodoList.Controllers
             var task = _taskRepository.GetById(id);
             if (task == null)
             {
-                return NotFound();
+                TempData["Error"] = "Task not found.";
+                return RedirectToAction("Index");
             }
             return View(task);
         }
-
 
         // Edit Task
         [HttpPost]
@@ -75,11 +71,11 @@ namespace TodoList.Controllers
             if (ModelState.IsValid)
             {
                 _taskRepository.Update(task);
+                TempData["Message"] = "Task updated successfully!";
                 return RedirectToAction("Index");
             }
             return View(task);
         }
-
 
         // Delete Task By Id
         public ActionResult Delete(int id)
@@ -87,19 +83,19 @@ namespace TodoList.Controllers
             var task = _taskRepository.GetById(id);
             if (task == null)
             {
-                return NotFound();
+                TempData["Error"] = "Task not found.";
+                return RedirectToAction("Index");
             }
             return View(task);
         }
-
 
         // Delete All Task
         public ActionResult DeleteAll()
         {
             _taskRepository.DeleteAll();
+            TempData["Message"] = "All tasks deleted successfully!";
             return RedirectToAction("Index");
         }
-
 
         // Delete Confirm
         [HttpPost, ActionName("Delete")]
@@ -107,9 +103,9 @@ namespace TodoList.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             _taskRepository.Delete(id);
+            TempData["Message"] = "Task deleted successfully!";
             return RedirectToAction("Index");
         }
-
 
         // Export Task
         public ActionResult Export()
@@ -134,8 +130,10 @@ namespace TodoList.Controllers
                 csv.AppendLine(line);
             }
 
+            TempData["Message"] = "Tasks exported successfully!";
             return File(new UTF8Encoding().GetBytes(csv.ToString()), "text/csv", "tasks.csv");
         }
+
 
 
         private string EscapeCsvValue(string value)
@@ -146,7 +144,6 @@ namespace TodoList.Controllers
             }
             return value;
         }
-
 
         // Import Task
         [HttpPost]
@@ -179,6 +176,11 @@ namespace TodoList.Controllers
                         }
                     }
                 }
+                TempData["Message"] = "Tasks imported successfully!";
+            }
+            else
+            {
+                TempData["Error"] = "No file selected or file is empty!";
             }
             return RedirectToAction("Index");
         }

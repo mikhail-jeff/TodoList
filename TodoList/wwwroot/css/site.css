@@ -298,3 +298,25 @@ footer {
         box-shadow: none;
         outline-color: #ccc;
     }
+
+
+/* Custom Toastr Styles */
+.toast-success {
+    background-color: #28a745 !important; /* Green for success */
+    color: #fff !important;
+}
+
+.toast-error {
+    background-color: #dc3545 !important; /* Red for error */
+    color: #fff !important;
+}
+
+.toast-info {
+    background-color: #17a2b8 !important; /* Blue for info */
+    color: #fff !important;
+}
+
+.toast-warning {
+    background-color: #ffc107 !important; /* Yellow for warning */
+    color: #212529 !important;
+}
